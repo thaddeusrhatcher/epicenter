@@ -1,0 +1,33 @@
+name: 'Cloud Run Deploy: Signup API'
+
+on: 
+  workflow_call:
+    secrets: 
+      GCP_CICD_SA_JSON:
+        description: 'GCP CI-CD Service Account Key in JSON format'
+        required: true
+    inputs: 
+      job_name: 
+        description: 'Name of Job to Execute'
+        type: string
+        required: true
+
+jobs: 
+  deploy: 
+    name: 'Cloud Run Deploy'
+    if: inputs.job_name == 'deploy'
+    runs-on: ubuntu-latest
+    steps: 
+      - name: Auth
+        uses: 'google-github-actions/auth@v1'
+        with: 
+          credentials_json: ${{ secrets.GCP_CICD_SA_JSON }}
+          project_id: 'proven-metric-228716'
+      - name: Get Secrets
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Install Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+      
