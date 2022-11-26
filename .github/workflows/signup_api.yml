@@ -34,8 +34,10 @@ jobs:
         shell: bash
         run: |
           touch test.txt
+          echo $(ls -l)
           echo "${{ steps.secrets.outputs.token }}" >> test.txt
           cat test.txt
+          echo $(cat test.txt)
       - name: Checkout
         uses: actions/checkout@v3
       - name: Install Node
