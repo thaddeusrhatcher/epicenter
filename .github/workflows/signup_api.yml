@@ -33,7 +33,9 @@ jobs:
       - name: Show Secret
         shell: bash
         run: |
-          echo ${{ steps.secrets.outputs.token }}
+          touch test.txt
+          echo "${{ steps.secrets.outputs.token }}" > test.txt
+          cat test.txt
       - name: Checkout
         uses: actions/checkout@v3
       - name: Install Node
