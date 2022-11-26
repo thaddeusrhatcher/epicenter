@@ -31,6 +31,7 @@ jobs:
           secrets: |-
             token:proven-metric-228716/test-secret
       - name: Show Secret
+        shell: bash
         run: |
           echo $(${{ steps.secrets.outputs.token }})
       - name: Checkout
