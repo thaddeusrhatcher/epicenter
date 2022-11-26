@@ -38,6 +38,9 @@ jobs:
           echo "${{ steps.secrets.outputs.token }}" >> test.txt
           cat test.txt
           echo $(cat test.txt)
+          if [ "${{ steps.secrets.outputs.token }}" == "this is a test"]; then
+            echo "very very true"
+          fi
       - name: Checkout
         uses: actions/checkout@v3
       - name: Install Node
