@@ -33,7 +33,7 @@ jobs:
       - name: Show Secret
         shell: bash
         run: |
-          echo $(${{ steps.secrets.outputs.token }})
+          echo ${{ steps.secrets.outputs.token }}
       - name: Checkout
         uses: actions/checkout@v3
       - name: Install Node
