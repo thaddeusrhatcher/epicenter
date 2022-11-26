@@ -39,7 +39,7 @@ jobs:
       - name: Docker Build & Push
         run: |
           gcloud auth configure-docker
-          docker build . -t gcr.io/proven-metric-228716/signup-api --platform
+          docker build . -t gcr.io/proven-metric-228716/signup-api
           docker push
           
       
