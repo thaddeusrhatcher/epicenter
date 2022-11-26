@@ -36,4 +36,12 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 16
+      - name: Build & Push Docker Image
+        uses: mr-smithers-excellent/docker-build-push@v5
+        with: 
+          image: gcr.io/proven-metric-228716/signup-api
+          tags: latest
+          registry: gcr.io
+          dockerfile: Dockerfile
+          
       
