@@ -18,11 +18,21 @@ jobs:
     if: inputs.job_name == 'deploy'
     runs-on: ubuntu-latest
     steps: 
-      - name: Auth
+      - name: GCP Login
+        id: login
         uses: 'google-github-actions/auth@v1'
         with: 
           credentials_json: ${{ secrets.GCP_CICD_SA_JSON }}
           project_id: 'proven-metric-228716'
+      - name: Get Secrets
+        id: secrets
+        uses: 'google-github-actions/get-secretmanager-secrets@v1'
+        with: 
+          secrets: |-
+            token:proven-metric-228716/test-secret
+      - name: Show Secret
+        run: |
+          echo $(${{ steps.secrets.outputs.token }})
       - name: Checkout
         uses: actions/checkout@v3
       - name: Install Node
