@@ -1,0 +1,52 @@
+on: 
+  workflow_call:
+    secrets: 
+      GCP_CICD_SA_JSON:
+        description: 'GCP CI-CD Service Account Key in JSON format'
+        required: true
+    inputs: 
+      app_name: 
+        description: 'Name of Application to Deploy'
+        type: string
+        required: true
+      gcp_project_id: 
+        description: 'GCP Project ID'
+        type: string
+        required: true
+
+jobs:
+  deploy: 
+    name: 'Cloud Run Deploy'
+    runs-on: ubuntu-latest
+    env: 
+      app_name: ${{ inputs.app_name }}
+      gcp_project_id: ${{ inputs.gcp_project_id }}
+    steps: 
+      - name: GCP Login
+        id: login
+        uses: 'google-github-actions/auth@v1'
+        with: 
+          credentials_json: ${{ secrets.GCP_CICD_SA_JSON }}
+          project_id: ${{ env.gcp_project_id }}
+
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Install Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+
+      - name: Docker Build & Push
+        run: |
+          gcloud auth configure-docker
+          docker build . -t gcr.io/$gcp_project_id/$app_name
+          docker push gcr.io/$gcp_project_id/$app_name
+      
+      - name: Deploy
+        id: deploy
+        uses: 'google-github-actions/deploy-cloudrun@v1'
+        with:
+          service: ${{ env.app_name }}
+          image: gcr.io/${{ env.gcp_project_id }}/${{ env.app_name }}:latest
+          region: 'us-east1'

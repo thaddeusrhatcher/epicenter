@@ -1,4 +1,4 @@
-name: 'Cloud Run Deploy: Signup API'
+name: 'Signup API Base Workflow'
 
 on: 
   workflow_call:
@@ -16,30 +16,11 @@ jobs:
   deploy: 
     name: 'Cloud Run Deploy'
     if: inputs.job_name == 'deploy'
-    runs-on: ubuntu-latest
-    steps: 
-      - name: GCP Login
-        id: login
-        uses: 'google-github-actions/auth@v1'
-        with: 
-          credentials_json: ${{ secrets.GCP_CICD_SA_JSON }}
-          project_id: 'proven-metric-228716'
-      - name: Get Secrets
-        id: secrets
-        uses: 'google-github-actions/get-secretmanager-secrets@v1'
-        with: 
-          secrets: |-
-            token:proven-metric-228716/test-secret
-      - name: Checkout
-        uses: actions/checkout@v3
-      - name: Install Node
-        uses: actions/setup-node@v3
-        with:
-          node-version: 16
-      - name: Docker Build & Push
-        run: |
-          gcloud auth configure-docker
-          docker build . -t gcr.io/proven-metric-228716/signup-api
-          docker push
+    uses: ./.github/workflows/cloud_run_deploy.yml
+    with: 
+      app_name: 'signup-api'
+      gcp_project_id: 'proven-metric-228716'
+    secrets: 
+      GCP_CICD_SA_JSON: ${{ secrets.GCP_CICD_SA_JSON }}
           
       
