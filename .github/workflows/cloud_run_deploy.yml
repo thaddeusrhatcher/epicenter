@@ -22,13 +22,6 @@ jobs:
       app_name: ${{ inputs.app_name }}
       gcp_project_id: ${{ inputs.gcp_project_id }}
     steps: 
-      - name: GCP Login
-        id: login
-        uses: 'google-github-actions/auth@v1'
-        with: 
-          credentials_json: ${{ secrets.GCP_CICD_SA_JSON }}
-          project_id: ${{ env.gcp_project_id }}
-
       - name: Checkout
         uses: actions/checkout@v3
 
@@ -36,6 +29,13 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 16
+
+      - name: GCP Login
+        id: login
+        uses: 'google-github-actions/auth@v1'
+        with: 
+          credentials_json: ${{ secrets.GCP_CICD_SA_JSON }}
+          project_id: ${{ env.gcp_project_id }}
 
       - name: Docker Build & Push
         run: |
